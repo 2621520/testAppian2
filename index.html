@@ -85,6 +85,7 @@
       const transformer = new Konva.Transformer();
       layer.add(transformer);
       transformer.nodes([shape]);
+      shape.transformer = transformer; 
       shape.on('click', function () {
         selectedShape = this;
         transformer.nodes([this]);
@@ -112,7 +113,10 @@
     }
 
     function deleteSelected() {
-      if (selectedShape) {
+      if (selectedShape) {    
+		if (selectedShape.transformer) {
+      		selectedShape.transformer.destroy();
+    	}
         selectedShape.destroy();
         layer.draw();
         selectedShape = null;
@@ -120,7 +124,10 @@
     }
 
     document.addEventListener('keydown', function (e) {
-      if (e.key === 'Delete' && selectedShape) {
+      if (e.key === 'Delete' && selectedShape) {    
+		if (selectedShape.transformer) {
+      		selectedShape.transformer.destroy();
+    	}
         selectedShape.destroy();
         layer.draw();
         selectedShape = null;
