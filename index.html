@@ -19,131 +19,226 @@
   <div id="controls">
     <button onclick="addSquare()">Añadir Cuadrado</button>
     <button onclick="addTriangle()">Añadir Triángulo</button>
+	<button onclick="addCircle()">Añadir Circulo</button>
     <button onclick="downloadImage()">Descargar Imagen</button>
   </div>
   <div id="container"></div>
   <script>
     let selectedShape = null;
-    let stage = new Konva.Stage({
-      container: 'container',
-      width: 800,
-      height: 600,
-    });
-    let layer = new Konva.Layer();
-    stage.add(layer);
-    let imageObj = new Image();
-    document.getElementById('imageUpload').addEventListener('change', function (e) {
-      const file = e.target.files[0];
-      const reader = new FileReader();
-      reader.onload = function (evt) {
+let stage = new Konva.Stage({
+    container: 'container',
+    width: 800,
+    height: 600,
+});
+let layer = new Konva.Layer();
+stage.add(layer);
+let imageObj = new Image();
+document.getElementById('imageUpload').addEventListener('change', function (e) {
+    const file = e.target.files[0];
+    const reader = new FileReader();
+    reader.onload = function (evt) {
         imageObj.onload = function () {
-          const konvaImage = new Konva.Image({
-            image: imageObj,
-            x: 0,
-            y: 0,
-            width: stage.width(),
-            height: stage.height(),
-          });
-          layer.destroyChildren(); // Limpiar capa
-          layer.add(konvaImage);
-          layer.draw();
+            const konvaImage = new Konva.Image({
+                image: imageObj,
+                x: 0,
+                y: 0,
+                width: stage.width(),
+                height: stage.height(),
+            });
+            layer.destroyChildren(); // Limpiar capa
+            layer.add(konvaImage);
+            layer.draw();
         };
         imageObj.src = evt.target.result;
-      };
-      reader.readAsDataURL(file);
-    });
+    };
+    reader.readAsDataURL(file);
+});
 
-    function addSquare() {
-      const square = new Konva.Rect({
-        x: 50,
-        y: 50,
-        width: 50,
-        height: 50,
-        fill: 'red',
-        draggable: true,
-	opacity: 0.5
-      });
-      addTransformer(square);
-      layer.add(square);
-      layer.draw();
-    }
+function addCircle() {
+  // Crear el círculo
+  const circle = new Konva.Circle({
+    x: 150,
+    y: 150,
+    radius: 30,
+    fill: 'green',
+    draggable: false,
+    opacity: 0.5
+  });
+
+  // Crear el texto debajo del círculo
+  const labelText = new Konva.Text({
+    x: 120, // centrado respecto al círculo
+    y: 185, // y + radius + margen
+    text: 'Círculo',
+    fontSize: 16,
+    fontFamily: 'Calibri',
+    fill: 'black'
+  });
+
+  // Crear un grupo para mover ambos juntos
+  const group = new Konva.Group({
+    x: 0,
+    y: 0,
+    draggable: true
+  });
+
+  group.add(circle);
+  group.add(labelText);
+  addTransformer(group);
+  layer.add(group);
+  layer.draw();
+}
+
+
+function addSquare() {
+  // Crear el cuadrado
+  const square = new Konva.Rect({
+    x: 50,
+    y: 50,
+    width: 50,
+    height: 50,
+    fill: 'red',
+    draggable: false, // El grupo será draggable
+    opacity: 0.5
+  });
+
+  // Crear el texto debajo del cuadrado
+  const labelText = new Konva.Text({
+    x: 50,
+    y: 105, // y + height + pequeño margen
+    text: 'Cuadrado',
+    fontSize: 16,
+    fontFamily: 'Calibri',
+    fill: 'black'
+  });
+
+  // Crear un grupo para mover ambos juntos
+  const group = new Konva.Group({
+    x: 0,
+    y: 0,
+    draggable: true
+  });
+
+  group.add(square);
+  group.add(labelText);
+
+  addTransformer(group);
+  layer.add(group);
+  layer.draw();
+}
+
 
     function addTriangle() {
-      const triangle = new Konva.Line({
-        points: [100, 100, 130, 150, 70, 150],
-        fill: 'blue',
-        stroke: 'black',
-        strokeWidth: 2,
-        closed: true,
-        draggable: true,
-	opacity: 0.5
-      });
-      addTransformer(triangle);
-      layer.add(triangle);
-      layer.draw();
-    }
+  // Crear el triángulo
+  const triangle = new Konva.Line({
+    points: [100, 100, 130, 150, 70, 150],
+    fill: 'blue',
+    stroke: 'black',
+    strokeWidth: 2,
+    closed: true,
+    draggable: false, // El grupo será draggable
+    opacity: 0.5
+  });
 
-    function addTransformer(shape) {
-      const transformer = new Konva.Transformer();
-      layer.add(transformer);
-      transformer.nodes([shape]);
-      shape.transformer = transformer; 
-      shape.on('click', function () {
-        selectedShape = this;
-        transformer.nodes([this]);
-      });
-    }
-	  
-    function downloadImage() {
-  // Ocultar todos los transformers antes de exportar
-  layer.find('Transformer').forEach(t => t.hide());
+  // Crear el texto como etiqueta en la base del triángulo
+  const labelText = new Konva.Text({
+    x: 70, // alineado con la base del triángulo
+    y: 155, // justo debajo de la base
+    text: 'Triángulo',
+    fontSize: 16,
+    fontFamily: 'Calibri',
+    fill: 'black'
+  });
+
+  // Crear un grupo para mover ambos juntos
+  const group = new Konva.Group({
+    x: 0,
+    y: 0,
+    draggable: true
+  });
+
+  group.add(triangle);
+  group.add(labelText);
+
+  addTransformer(group);
+  layer.add(group);
   layer.draw();
+}
 
-  const dataURL = stage.toDataURL({ pixelRatio: 2 });
 
-  // Volver a mostrar los transformers después de exportar
-  layer.find('Transformer').forEach(t => t.show());
-  layer.draw();
+function addTransformer(group) {
+  const transformer = new Konva.Transformer();
+  layer.add(transformer);
+  transformer.nodes([group]);
+  group.transformer = transformer;
 
-  fetch('https://capgemini-spain-1016.appiancloud.com/suite/webapi/guardarImagenAppian', {
-    method: 'POST',
-    mode: 'cors',
-    headers: {
-      'Content-Type': 'application/json',
-      'Appian-API-Key': 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJiOGRjMzU4YS02MGViLWMxN2ItZmM4Ni00M2JlMmIzNzk2NTYifQ.RR5Y4TwvMfkxiZzcVKER_sRVJMg3gNN307C2_Q4rlqY'
-    },
-    body: JSON.stringify({
-      nombreArchivo: 'marcacion.png',
-      imagenBase64: dataURL
-    })
-  })
-  .then(response => response.json())
-  .catch(error => {
-    console.error('Error al enviar la imagen a APPIAN:', error);
+  // Asegurar que el grupo sea seleccionable
+  group.on('click', function () {
+    selectedShape = group;
+    transformer.nodes([group]);
   });
 }
 
-    function deleteSelected() {
-      if (selectedShape) {    
-		if (selectedShape.transformer) {
-      		selectedShape.transformer.destroy();
-    	}
-        selectedShape.destroy();
-        layer.draw();
-        selectedShape = null;
-      }
+
+ function downloadImage() {
+      const dataURL = stage.toDataURL({ pixelRatio: 2 });
+	  
+  // Obtener etiquetas únicas
+  const etiquetasSet = new Set();
+  layer.getChildren().forEach(child => {
+    if (child instanceof Konva.Group) {
+      child.getChildren().forEach(inner => {
+        if (inner instanceof Konva.Text) {
+          etiquetasSet.add(inner.text());
+        }
+      });
+    }
+  });
+
+  const etiquetas = Array.from(etiquetasSet);
+
+      fetch('https://capgemini-spain-1016.appiancloud.com/suite/webapi/guardarImagenAppian', {
+        method: 'POST',
+        mode: 'cors',
+        headers: {
+          'Content-Type': 'application/json',
+          'Appian-API-Key': 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJiOGRjMzU4YS02MGViLWMxN2ItZmM4Ni00M2JlMmIzNzk2NTYifQ.RR5Y4TwvMfkxiZzcVKER_sRVJMg3gNN307C2_Q4rlqY'
+        },
+        body: JSON.stringify({
+          nombreArchivo: 'marcacion.png',
+          imagenBase64: dataURL,
+		  etiquetas: etiquetas
+        })
+      })
+      .then(response => response.json())
+      .catch(error => {
+        console.error('Error al enviar la imagen a APPIAN:', error);
+      });
     }
 
-    document.addEventListener('keydown', function (e) {
-      if (e.key === 'Delete' && selectedShape) {    
-		if (selectedShape.transformer) {
-      		selectedShape.transformer.destroy();
-    	}
+function deleteSelected() {
+    if (selectedShape) {
+        if (selectedShape.transformer) {
+                  selectedShape.transformer.destroy();
+               
+        }
         selectedShape.destroy();
         layer.draw();
         selectedShape = null;
-      }
-    });
+    }
+}
+
+document.addEventListener('keydown', function (e) {
+    if (e.key === 'Delete' && selectedShape) {
+        if (selectedShape.transformer) {
+                  selectedShape.transformer.destroy();
+               
+        }
+        selectedShape.destroy();
+        layer.draw();
+        selectedShape = null;
+    }
+});
   </script>
 </body>
 </html>
