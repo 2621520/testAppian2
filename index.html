@@ -17,7 +17,7 @@
   <h2>Upload a map and add markings</h2>
   <input type="file" id="imageUpload" accept="image/*">
   <div id="controls">
-    <button onclick="addSquare()">Add Fitting 1</button>
+    <button onclick="addSquare()">Add Fitting</button>
     <button onclick="addTriangle()">Add Entrance Area</button>
 	<button onclick="addCircle()">Add Customer Service</button>
     <button onclick="downloadImage()">Download Image</button>
@@ -69,7 +69,7 @@ function addCircle() {
   const labelText = new Konva.Text({
     x: 120, // centrado respecto al círculo
     y: 185, // y + radius + margen
-    text: 'Círculo',
+    text: 'Customer Service',
     fontSize: 16,
     fontFamily: 'Calibri',
     fill: 'black'
@@ -106,7 +106,7 @@ function addSquare() {
   const labelText = new Konva.Text({
     x: 50,
     y: 105, // y + height + pequeño margen
-    text: 'Cuadrado',
+    text: 'Fitting',
     fontSize: 16,
     fontFamily: 'Calibri',
     fill: 'black'
@@ -144,7 +144,7 @@ function addSquare() {
   const labelText = new Konva.Text({
     x: 70, // alineado con la base del triángulo
     y: 155, // justo debajo de la base
-    text: 'Triángulo',
+    text: 'Entrance Area',
     fontSize: 16,
     fontFamily: 'Calibri',
     fill: 'black'
