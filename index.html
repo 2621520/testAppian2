@@ -14,18 +14,18 @@
   </style>
 </head>
 <body>
-  <h2>Sube un mapa y añade marcaciones</h2>
+  <h2>Upload a map and add markings</h2>
   <input type="file" id="imageUpload" accept="image/*">
   <div id="controls">
-    <button onclick="addSquare()">Añadir Cuadrado</button>
-    <button onclick="addTriangle()">Añadir Triángulo</button>
-	<button onclick="addCircle()">Añadir Circulo</button>
-    <button onclick="downloadImage()">Descargar Imagen</button>
+    <button onclick="addSquare()">Add Fitting 1</button>
+    <button onclick="addTriangle()">Add Entrance Area</button>
+	<button onclick="addCircle()">Add Customer Service</button>
+    <button onclick="downloadImage()">Download Image</button>
   </div>
   <div id="container"></div>
   <script>
     let selectedShape = null;
-let stage = new Konva.Stage({
+    let stage = new Konva.Stage({
     container: 'container',
     width: 800,
     height: 600,
